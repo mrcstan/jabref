@@ -38,6 +38,11 @@ public class GenerateEntryFromIdAction extends SimpleCommand {
         this.identifier = identifier;
         this.taskExecutor = taskExecutor;
         this.entryFromIdPopOver = entryFromIdPopOver;
+        /**
+         * stateManger injected for access by NewEntryAction
+         * @author Marcus Tan
+         * @since 2021-11-07
+         */
         this.stateManager = stateManager;
     }
 
@@ -47,13 +52,18 @@ public class GenerateEntryFromIdAction extends SimpleCommand {
         backgroundTask.titleProperty().set(Localization.lang("Import by ID"));
         backgroundTask.showToUser(true);
         backgroundTask.onRunning(() -> dialogService.notify("%s".formatted(backgroundTask.messageProperty().get())));
+        /**
+         * Upon failure to import by ID, a dialog box with the following two options appear：
+         * （1）add entries manually
+         *  (2) return to original dialog box
+         * @author Marcus Tan
+         * @since 2021-11-07
+         */
         backgroundTask.onFailure((e) -> {
-            // When unable to import by ID, present the user options to cancel or add entry manually
             boolean addEntryFlag = dialogService.showConfirmationDialogAndWait(Localization.lang("Failed to import by ID"),
                                     e.getMessage(),
                                    Localization.lang("Add entry manually"));
             if (addEntryFlag) {
-                // add entry manually
                 new NewEntryAction(libraryTab.frame(), StandardEntryType.Article, dialogService,
                                     preferencesService, stateManager).execute();
             }
