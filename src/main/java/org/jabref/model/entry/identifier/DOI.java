@@ -153,9 +153,11 @@ public class DOI implements Identifier {
      * Creates an Optional&lt;DOI> from various schemes including URL, URN, and plain DOIs.
      * <p>
      * Useful for suppressing the <c>IllegalArgumentException</c> of the Constructor and checking for Optional.isPresent() instead.
-     *
+     * Modified to use regexp to remove non-ASCII characters
      * @param doi the DOI/Short DOI string
      * @return an Optional containing the DOI or an empty Optional
+     * @author Marcus Tan
+     * @since 2021-11-13
      */
     public static Optional<DOI> parse(String doi) {
         try {

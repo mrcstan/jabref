@@ -59,6 +59,14 @@ public class DoiFetcher implements IdBasedFetcher, EntryBasedFetcher {
         return Optional.of(HelpFile.FETCHER_DOI);
     }
 
+    /**
+     * This method searches online for the provided DOI.
+     * try and catch block added to provide correct exception message
+     * when DOI exist online but no relevant data can be found
+     * @param identifier a string which uniquely identifies the item
+     * @return
+     * @throws FetcherException
+     */
     @Override
     public Optional<BibEntry> performSearchById(String identifier) throws FetcherException {
         Optional<DOI> doi = DOI.parse(identifier);
