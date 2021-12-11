@@ -31,6 +31,10 @@ public class GenerateEntryFromIdAction extends SimpleCommand {
     private final PopOver entryFromIdPopOver;
     private final StateManager stateManager;
 
+    /**
+     * stateManger injected for access by NewEntryAction
+     * @author Marcus Tan
+     */
     public GenerateEntryFromIdAction(LibraryTab libraryTab, DialogService dialogService, PreferencesService preferencesService, TaskExecutor taskExecutor, PopOver entryFromIdPopOver, String identifier, StateManager stateManager) {
         this.libraryTab = libraryTab;
         this.dialogService = dialogService;
@@ -38,27 +42,22 @@ public class GenerateEntryFromIdAction extends SimpleCommand {
         this.identifier = identifier;
         this.taskExecutor = taskExecutor;
         this.entryFromIdPopOver = entryFromIdPopOver;
-        /**
-         * stateManger injected for access by NewEntryAction
-         * @author Marcus Tan
-         * @since 2021-11-07
-         */
         this.stateManager = stateManager;
     }
 
+    /**
+     * This method runs commands in the background to import by ID.
+     * backgroundTask.onFailure defines the actions to be taken upon import-by-ID failure.
+     * The actions have been modified to show a dialog box with the two options:（1）add entries manually,
+     * (2) return to original dialog box
+     * @author Marcus Tanß
+     */
     @Override
     public void execute() {
         BackgroundTask<Optional<BibEntry>> backgroundTask = searchAndImportEntryInBackground();
         backgroundTask.titleProperty().set(Localization.lang("Import by ID"));
         backgroundTask.showToUser(true);
         backgroundTask.onRunning(() -> dialogService.notify("%s".formatted(backgroundTask.messageProperty().get())));
-        /**
-         * Upon failure to import by ID, a dialog box with the following two options appear：
-         * （1）add entries manually
-         *  (2) return to original dialog box
-         * @author Marcus Tan
-         * @since 2021-11-07
-         */
         backgroundTask.onFailure((e) -> {
             boolean addEntryFlag = dialogService.showConfirmationDialogAndWait(Localization.lang("Failed to import by ID"),
                                     e.getMessage(),

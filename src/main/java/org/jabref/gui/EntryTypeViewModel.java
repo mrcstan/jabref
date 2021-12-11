@@ -126,6 +126,13 @@ public class EntryTypeViewModel {
         }
     }
 
+    /**
+     * This method fetch an input ID.
+     * When the result return by the fetcher is empty, a dialog box with the following two options appear:
+     * (1）add entries manually, (2) return to original dialog box
+     * @author Marcus Tan
+     * @since 2021-11-07
+     */
     public void runFetcherWorker() {
         searchSuccesfulProperty.set(false);
         fetcherWorker.run();
@@ -180,13 +187,6 @@ public class EntryTypeViewModel {
             } else if (StringUtil.isBlank(idText.getValue())) {
                 dialogService.showWarningDialogAndWait(Localization.lang("Empty search ID"), Localization.lang("The given search ID was empty."));
             } else if (result.isEmpty()) {
-                /**
-                 * When the result return by the fetcher is empty, a dialog box with the following two options appear：
-                 *（1）add entries manually
-                 * (2) return to original dialog box
-                 * @author Marcus Tan
-                 * @since 2021-11-07
-                 */
                 String fetcher = selectedItemProperty().getValue().getName();
                 String searchId = idText.getValue();
                 boolean addEntryFlag = dialogService.showConfirmationDialogAndWait(Localization.lang("DOI not found"),
